@@ -23,9 +23,10 @@ def forca():
             "3. Frutas\n "
             "4. Objeto\n "
             "5. Paises\n "
-            "6. Aleatório (Palavra e dificuldade aleatórios)-> ")
+            "6. Aleatório (Palavra e dificuldade aleatórios)\n " \
+            "7. Retornar ao menu principal -> ")
         cls()
-        if categoria_escolhida not in ["1", "2", "3", "4", "5", "6"]: #escolhendo categoria para depois ser comparada no index
+        if categoria_escolhida not in ["1", "2", "3", "4", "5", "6", "7"]: #escolhendo categoria para depois ser comparada no index
             print("Selecione uma opção válida! ")
             cls()
             continue
@@ -39,22 +40,122 @@ def forca():
                 palavra = linha[0] #retorna a palavra
                 dificuldade = linha[1] #retorna a dificuldade
                 jogo_aleatorio = False
+                start_game = True # variável que vai definir se o jogo vai começar ou não
+                chances = 0 #definindo o número de chances do jogador
+
+        elif categoria_escolhida == 7: #definindo retorno ao menu principal
+            star_game = False
+            opcao = 3
+            return opcao
         else:
             categoria_escolhida = categoria[int(categoria_escolhida) -1] #ajustando para a indexação do python.
             linha = random.choice( list(csv.reader(open(f"games/palavras/{categoria_escolhida}.csv")))) #escolhe uma linha aleatória dentro do csv da categoria escolhida
             palavra = linha[0] #retorna a palavra
             dificuldade = linha[1] #retorna a dificuldade
-        
-        if dificuldade == "facil":
-            mensagem_dificuldade = "Vai ser moleza!"
-        elif dificuldade == "media":
-            mensagem_dificuldade = "Boa Sorte!"
-        elif dificuldade == "dificil":
-            mensagem_dificuldade = "Vamos ver como vai ser sair!"
-        
-        print(f"A palavra escolhida tem a dificuldade {dificuldade}! {mensagem_dificuldade}")
-        time.sleep(2.5)
-        cls()
+            start_game = True # variável que vai definir se o jogo vai começar ou não
+            chances = 0 #definindo o número de chances do jogador
 
+        while start_game: #ínicio do jogo de fato
 
+            if dificuldade == "facil": # Mensagens do header de acordo com a dificuldade
+                mensagem_dificuldade = "Vai ser moleza!"
+            elif dificuldade == "media":
+                mensagem_dificuldade = "Boa Sorte!"
+            elif dificuldade == "dificil":
+                mensagem_dificuldade = "Vamos ver como vai ser sair!"
+            
+            topo = f"Seu desafio tem a dificuldade {dificuldade}! {mensagem_dificuldade}" #definição do header        
+            cls()
+
+            forca_desenho = ["""
++----+
+|
+|
+|
+|
+=============
+            """,
+            """
++----+
+|    O
+|
+|
+|
+=============
+            """, """
++----+
+|    O
+|   /
+|
+|
+=============
+            """, """
++----+
+|    O
+|   /|
+|
+|
+=============
+            """,
+            """
++----+
+|    O
+|   /|\  
+|
+|
+=============
+            """,
+            """
++----+
+|    O
+|   /|\  
+|   / 
+|
+=============
+            """,
+            """
++----+
+|    O
+|   /|\  
+|   / \  
+|
+=============
+            """]
+
+            cls()
+            print(topo) #header que vai ficar sempre mostrando o nível da palavra        
+            print(forca_desenho[chances]) #desenho da forca             
+            alfabeto = "abcdefghijklmnopqrstuvwxyz" #letras aceitas
+            letras_ocultas = ["_"] * len(palavra)
+            print(f"Dica: {categoria_escolhida}")
+            print(palavra)
+            print(" ".join(letras_ocultas))
+            print()
+            tentativa = input(f"Digite uma letra: -> ")
+            if len(tentativa) != 1 or tentativa not in alfabeto: #caso a entrada não seja uma unica letra, vai retornar sem perder vida
+                print("Digite apenas uma letra, sem acentos! ")
+                time.sleep(2)
+                continue
+            elif tentativa not in palavra: #caso seja apenas uma letra mas não exista na palavra, perde uma vida
+                print("Não temos essa letra nesta palavra!")
+                time.sleep(2)
+                chances += 1
+                if chances == 5: #Aviso da ultima chance
+                    print("Essa é a última chance em!")
+                    time.sleep(2)
+                    continue
+                elif chances == 6: #condição de derrota
+                    print(f"Você perdeu! a palavra era: {palavra}")
+                    time.sleep(2)
+                    cls()
+                continue
+
+            elif tentativa in palavra: #condição de acerto
+                print("Bom palpite, essa letra existe!")
+                time.sleep(2)
+                continue
+
+            
+            cls()
+            break
 

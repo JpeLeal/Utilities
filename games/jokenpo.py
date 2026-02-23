@@ -19,7 +19,7 @@ def jokenpo():
             "-Tesoura\n-> "
             ).strip().lower()
         cls()
-        if jogada not in ["pedra", "papel", "tesoura"]:
+        if jogada not in ["pedra", "papel", "tesoura"]: #validando entrada
             print("Selecione uma opção válida! ")
             continue
         
@@ -78,6 +78,8 @@ def jokenpo():
             opcao = int(opcao)
             if opcao not in opcoes_retorno:
                 print("Selecione uma opção válida!")
+                time.sleep(1.5)
                 cls()
                 continue
+            cls()
             break
